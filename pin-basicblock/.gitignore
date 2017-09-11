@@ -1,0 +1,5 @@
+*.out
+*.so
+*.o
+obj-intel64/
+obj-intel64/*
