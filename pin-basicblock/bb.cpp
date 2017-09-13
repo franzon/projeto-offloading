@@ -1,24 +1,47 @@
 #include "pin.H"
 #include <iostream>
 #include <fstream>
+#include <string>
 
 std::ofstream TraceFile;
 unsigned long trace_count = 0;
 
-void Trace(TRACE trace, VOID *v)
+void Routine(RTN rtn, VOID *v)
 {
-    trace_count++;
-    unsigned long bb_count = 0;
-    for (BBL bbl = TRACE_BblHead(trace); BBL_Valid(bbl); bbl = BBL_Next(bbl))
+    if (RTN_Name(rtn).compare("main") == 0)
     {
-        bb_count++;
+        RTN_Open(rtn);
+        for (INS ins = RTN_InsHead(rtn); INS_Valid(ins); ins = INS_Next(ins))
+        {
+            TraceFile << std::hex << INS_Address(ins) << " : " << INS_Disassemble(ins);
+            if (INS_Category(ins) == XED_CATEGORY_COND_BR)
+            {
+                unsigned long target = INS_DirectBranchOrCallTargetAddress(ins);
+                bool found_target = false;
+                for (INS target_ins = ins; INS_Valid(target_ins); target_ins = INS_Prev(target_ins))
+                {
+
+                    if (INS_Address(target_ins) == target)
+                    {
+                        found_target = true;
+                        break;
+                    }
+                }
+                if (found_target)
+                {
+                    TraceFile
+                        << " -- HERE -- Target: " << std::hex << target;
+                }
+            }
+            TraceFile << endl;
+        }
+        RTN_Close(rtn);
     }
-    TraceFile << "[Trace] Number of BBs: " << bb_count << endl;
 }
 
 VOID Fini(INT32 code, VOID *v)
 {
-    TraceFile << "Total number of traces: " << trace_count << endl;
+
     TraceFile.close();
 }
 
@@ -29,7 +52,7 @@ int main(int argc, char *argv[])
 
     TraceFile.open("bb.out");
 
-    TRACE_AddInstrumentFunction(Trace, 0);
+    RTN_AddInstrumentFunction(Routine, 0);
     PIN_AddFiniFunction(Fini, 0);
 
     PIN_StartProgram();

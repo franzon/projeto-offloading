@@ -1,14 +1,12 @@
 #include <stdio.h>
-#include <stdlib.h>
-
 
 int main()
 {
-	printf("Test\n");
-	for (int i = 0; i < 5; i++) {
-		printf("%d", i);
+
+	for (int i = 0; i < 10; i++)
+	{
+		printf("X");
 	}
 
-	
 	return 0;
 }
