@@ -1,0 +1,73 @@
+for (int i = 0; i < 10; i++)
+{
+	printf("X");
+}
+
+--------------- PREDICATE --------------------------------------------------
+.text:0040146E                 mov     dword ptr [esp+1Ch], 0
+.text:00401476                 jmp     short loc_401489
+----------------- BODY -----------------------------------------------------
+.text:00401478
+.text:00401478 loc_401478:                             ; CODE XREF: _main+2Ej
+.text:00401478                 mov     dword ptr [esp], 58h ; int
+.text:0040147F                 call    _putchar
+.text:00401484                 add     dword ptr [esp+1Ch], 1
+--------------- CONDITION --------------------------------------------------
+.text:00401489
+.text:00401489 loc_401489:                             ; CODE XREF: _main+16j
+.text:00401489                 cmp     dword ptr [esp+1Ch], 9
+.text:0040148E                 jle     short loc_401478
+------------------ END -----------------------------------------------------
+.text:00401490                 mov     eax, 0
+.text:00401495                 leave
+.text:00401496                 retn
+
+
+PREDICATE -> CONDITION -> END
+                 |  A
+                 V  |
+
+                 BODY
+
+
+################################################################################################################################
+LinkedList* l = (LinkedList*)malloc(sizeof(LinkedList));
+
+for (El* tmp = l->first; tmp != NULL; tmp = tmp->next)
+    printf("%d ", tmp->val);
+
+
+--------------------------- PREDICATE --------------------------------------
+.text:0040146E                 mov     dword ptr [esp], 4 ; size_t
+.text:00401475                 call    _malloc
+.text:0040147A                 mov     [esp+18h], eax
+.text:0040147E                 mov     eax, [esp+18h]
+.text:00401482                 mov     eax, [eax]
+.text:00401484                 mov     [esp+1Ch], eax
+.text:00401488                 jmp     short loc_4014AB
+--------------------------- BODY -------------------------------------------
+.text:0040148A
+.text:0040148A loc_40148A:                             ; CODE XREF: _main+50j
+.text:0040148A                 mov     eax, [esp+1Ch]
+.text:0040148E                 mov     eax, [eax]
+.text:00401490                 mov     [esp+4], eax
+.text:00401494                 mov     dword ptr [esp], offset aD ; "%d "
+.text:0040149B                 call    _printf
+.text:004014A0                 mov     eax, [esp+1Ch]
+.text:004014A4                 mov     eax, [eax+4]
+.text:004014A7                 mov     [esp+1Ch], eax
+------------------------- CONDITION ----------------------------------------
+.text:004014AB
+.text:004014AB loc_4014AB:                             ; CODE XREF: _main+28j
+.text:004014AB                 cmp     dword ptr [esp+1Ch], 0
+.text:004014B0                 jnz     short loc_40148A
+--------------------------- END --------------------------------------------
+.text:004014B2                 mov     eax, 0
+.text:004014B7                 leave
+.text:004014B8                 retn
+
+PREDICATE -> CONDITION -> END
+                 |  A
+                 V  |
+
+                 BODY
