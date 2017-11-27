@@ -8,11 +8,11 @@
 ifdef PIN_ROOT
 CONFIG_ROOT := $(PIN_ROOT)/source/tools/Config
 else
-CONFIG_ROOT := ../Config
+CONFIG_ROOT := /opt/pin/source/tools/Config
 endif
 include $(CONFIG_ROOT)/makefile.config
 include makefile.rules
-include $(TOOLS_ROOT)/Config/makefile.default.rules
+include $(CONFIG_ROOT)/makefile.default.rules
 
 ##############################################################
 #
