@@ -3,6 +3,7 @@
 ```
 nop
 mov eax, eax
-mov ebx, ebx
+nop
+mov eax, eax
 nop
 ```
