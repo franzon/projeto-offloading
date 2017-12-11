@@ -38,16 +38,15 @@ INS GetLoopStart(INS ins) {
   return ins;
 }
 
-string ADDRINTToHexString(ADDRINT a)
-{
-    ostringstream temp;
-    temp << "0x" << hex <<a;
-    return temp.str();
-}
-
 void Routine(RTN rtn, VOID *v) {
 
   RTN_Open(rtn);
+  if ((RTN_Name(rtn).compare("__loop")) == 0) {
+
+    RTN_Close(rtn);
+    return;
+  }
+
   for (INS ins = RTN_InsHead(rtn); INS_Valid(ins); ins = INS_Next(ins)) {
 
     INS loop_start = GetLoopStart(ins);
@@ -59,13 +58,43 @@ void Routine(RTN rtn, VOID *v) {
 
       INS x;
       for (x = loop_start; INS_Valid(x) && !INS_IsBranch(x); x = INS_Next(x)) {
-        TraceFile << std::hex << INS_Address(x) << ": ";
-        TraceFile << INS_Disassemble(x) << endl;
+        loop_predicate.push_back(x);
       }
+      loop_predicate.push_back(x);
 
       ADDRINT jmp_addr = INS_DirectBranchOrCallTargetAddress(x);
-      TraceFile << ADDRINTToHexString(jmp_addr);
-      
+
+      for (x = INS_Next(x); INS_Valid(x) && INS_Address(x) != jmp_addr;
+           x = INS_Next(x)) {
+        loop_body.push_back(x);
+      }
+
+      for (; INS_Valid(x) && !INS_IsBranch(x); x = INS_Next(x)) {
+        loop_condition.push_back(x);
+      }
+      loop_condition.push_back(x);
+
+      TraceFile << "[Predicate]" << endl;
+      for (std::vector<INS>::iterator it = loop_predicate.begin();
+           it != loop_predicate.end(); ++it) {
+        TraceFile << std::hex << INS_Address(*it) << ": ";
+        TraceFile << INS_Disassemble(*it) << endl;
+      }
+
+      TraceFile << "[Body]" << endl;
+      for (std::vector<INS>::iterator it = loop_body.begin();
+           it != loop_body.end(); ++it) {
+        TraceFile << std::hex << INS_Address(*it) << ": ";
+        TraceFile << INS_Disassemble(*it) << endl;
+      }
+
+      TraceFile << "[Condition]" << endl;
+      for (std::vector<INS>::iterator it = loop_condition.begin();
+           it != loop_condition.end(); ++it) {
+        TraceFile << std::hex << INS_Address(*it) << ": ";
+        TraceFile << INS_Disassemble(*it) << endl;
+      }
+
       TraceFile << endl;
     }
   }
