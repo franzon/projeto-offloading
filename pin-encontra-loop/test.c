@@ -1,22 +1,22 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-typedef struct el {
-    int val;
-    struct el* next;
-} El;
+#pragma GCC push_options
+#pragma GCC optimize("O0")
+__attribute__((always_inline)) int loop()
 
-typedef struct list {
-    El* first;
-} LinkedList;
-
-int main()
 {
+  asm("nop \n\
+      movl %eax, %eax \n\
+        nop \n\
+        movl %eax, %eax \n\
+        nop \n\
+");
+}
+#pragma GCC pop_options
 
-    LinkedList* l = (LinkedList*)malloc(sizeof(LinkedList));
+int main() {
 
-    for (El* tmp = l->first; tmp != NULL; tmp = tmp->next)
-        printf("%d ", tmp->val);
-
-    return 0;
+  loop();
+  for (int i = 0; i < 10; i++)
+    printf("%d ", i);
 }
