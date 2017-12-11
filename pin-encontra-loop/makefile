@@ -5,8 +5,16 @@
 ##############################################################
 
 # If the tool is built out of the kit, PIN_ROOT must be specified in the make invocation and point to the kit root.
+<<<<<<< HEAD
 
 CONFIG_ROOT := /opt/pin/source/tools/Config
+=======
+ifdef PIN_ROOT
+CONFIG_ROOT := $(PIN_ROOT)/source/tools/Config
+else
+CONFIG_ROOT := /opt/pin/source/tools/Config
+endif
+>>>>>>> e065af4c7e2ec60a785e591c5ec2692384123ce0
 include $(CONFIG_ROOT)/makefile.config
 include makefile.rules
 include $(CONFIG_ROOT)/makefile.default.rules
