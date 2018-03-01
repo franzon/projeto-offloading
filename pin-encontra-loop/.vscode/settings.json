@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.tlh": "cpp",
+        "*.ph": "cpp"
+    }
+}

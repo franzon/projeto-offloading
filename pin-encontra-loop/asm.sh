@@ -1,1 +1,0 @@
-gcc test.c -S -masm=intel -o test.s
