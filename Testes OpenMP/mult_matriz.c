@@ -6,7 +6,7 @@
 void matrix_mult(int matA[][MAX_COL], int matB[][MAX_COL], int matC[][MAX_COL], int lines, int cols)
 {
     int i, j, k, sum;
-    #pragma omp parallel private(j) // perguntar para o rag
+    #pragma omp parallel private(j)
     {
         #pragma omp for
         for (i = 0; i < lines; i++)
