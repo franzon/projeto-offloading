@@ -4,7 +4,8 @@
 int main()
 {
 
-#pragma omp parallel
+    int i = 10, k = 5;
+#pragma omp parallel private(i) firstprivate(k)
     {
         printf("Executado por todas as threads. [%d]\n", omp_get_thread_num());
 
@@ -21,8 +22,18 @@ int main()
 
 #pragma omp single
         printf("Espera todas as threads terminarem a execução\n");
+
         printf("Executado por todas as threads. [%d]\n", omp_get_thread_num());
+
+        printf("Valor de i: %d\n", i);
+        printf("Valor de k: %d\n", k);
+
+        i = 100;
+        k = 200;
     }
+
+    printf("[Fora do parellel] Valor de i: %d\n", i);
+    printf("[Fora do parellel] Valor de k: %d\n", k);
 
     return 0;
 }

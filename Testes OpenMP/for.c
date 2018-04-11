@@ -4,6 +4,18 @@
 // Estava imprimindo resultados diferentes
 // Resolvido com reduction
 
+// Duvidas:
+/*
+
+    schedule guided
+    collapse
+    nowait
+    
+    sections
+    tasks
+
+*/
+
 int main()
 {
     int i = 0, j = 0;
@@ -26,7 +38,7 @@ int main()
             printf("i: %d [thread: %d]\n", i, omp_get_thread_num());
     }
 
-        // Testando nowait. Por que sem o nowait cada for é executado sequencialmente?
+        
 #pragma omp parallel
     {
 
